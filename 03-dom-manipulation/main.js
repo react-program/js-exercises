@@ -5,12 +5,10 @@ let matchingIndex,text = '';
 
 M = {
     data: {
-        appLi : document.querySelectorAll(".classifiedColumn > li"),
-        pocketLi : document.querySelectorAll("#pocket ul > li").length
+        appLi : document.querySelectorAll(".classifiedColumn > li")
     }, 
     setData : function(d){
         this.data.appLi = d.appLi;
-        this.data.pocketLi = d.pocketLi;
     },
     getData : function(){        
         return data;
@@ -18,20 +16,21 @@ M = {
 }
 
 V = {
-    update: function(matchingIndex,text){        
+    update: function(matchingIndex,text,poc_li){        
         //If matchingIndex is number then call sortList function
         if(!isNaN(matchingIndex)){        
             let ul = document.querySelectorAll("ul")[matchingIndex];
+            let poc_li = document.querySelectorAll("#pocket ul > li").length;
             ul.appendChild(text);
             //Sort Function
-            Array.from(ul.getElementsByTagName("LI"))
-            .sort(function(a, b){
-            a = a.textContent[1];
-            b = b.textContent[1]; 
+            Array.from(ul.getElementsByTagName("LI")).sort(function(a, b){ a = a.textContent[1]; b = b.textContent[1]; 
             if(!isNaN(a) && !isNaN(b)){
                 return a < b ? -1 : (a > b) ? 1 : 0;
+            }}).forEach(li => {ul.appendChild(li)});
+            if(poc_li==1){
+                var element = document.getElementById("pocket");
+                element.parentNode.removeChild(element);
             }
-            }).forEach(li => {ul.appendChild(li)});
         }
     }
 }
