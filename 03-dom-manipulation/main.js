@@ -1,27 +1,21 @@
-let column = document.querySelectorAll(".classifiedColumn");
+let column = Array.from(document.querySelectorAll(".classifiedColumn"));
 let tile = document.querySelectorAll("#pocket li");
 
 function push_stack(val)
 {
-    if(val.target.innerHTML[0] === "A")
-    {
-        column[0].appendChild(val.target);
+    for (let i = 0; i < column.length; i++) {
+        if(column[i].querySelector("li").innerText.includes(val.target.innerHTML[0]))
+        {
+            column[i].appendChild(val.target);
+            push_sort(i);
+        }
     }
-    else if(val.target.innerHTML[0] === "B")
-    {
-        column[1].appendChild(val.target);
-    }
-    else if(val.target.innerHTML[0] === "C")
-    {
-        column[2].appendChild(val.target);
-    }
-    push_sort(val.target.innerHTML[1]);
 }
 function push_sort(index)
 {
-    let ul = document.querySelectorAll("ul")[index-1];
+    let ul = document.querySelectorAll("ul")[index];
     Array.from(ul.getElementsByTagName("li"))
-    .sort(function(a, b){
+    .sort((a, b) => {
         a = a.textContent[1];
         b = b.textContent[1];
         if(!isNaN(a) && !isNaN(b)){
