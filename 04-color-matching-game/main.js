@@ -11,8 +11,8 @@ const model = {
     li : []
 }
 const controller = {
-    shuffle: arr => {
-        return arr.map(item => [item, item]).flat()
+    shuffle: clrs => {
+        return clrs.map(item => [item, item]).flat()
         .sort(() => Math.random() - 0.5).map(item => {
             return {color: item, freeze: false}
         });
