@@ -11,14 +11,13 @@ const controller = {
         return clrs.map(item => [item, item]).flat()
         .sort(() => Math.random() - 0.5).map(item => {
             return {color: item, freeze: false}
-        });
+        });     
     },
     elAction : (e) => {
-        curLi = model.nodes.indexOf(e.target); 
-        model.steps = model.steps+1;        
+        curLi = model.nodes.indexOf(e.target);       
         view.renderView(e,curLi);
     },
-    checkOpenedLi : () => {
+    checkOpenedLi : (e) => {
         let checkAttr = model.checkAttribute;
         let totArr = [];
         for(let a=0; a<checkAttr.length;a++){
@@ -27,20 +26,7 @@ const controller = {
             }
         }
         if(totArr.length == 2){
-            if(y[totArr[0]].color === y[totArr[1]].color){
-                model.curEl[totArr[0]].style.backgroundColor = y[totArr[0]].color;
-                model.curEl[totArr[1]].style.backgroundColor = y[totArr[1]].color;
-                model.curEl[totArr[0]].setAttribute('freeze', true);
-                model.curEl[totArr[1]].setAttribute('freeze', true);
-                view.checkCompleted();
-            }else{
-                localStorage.setItem('c1',totArr[0]);
-                localStorage.setItem('c2',totArr[1]);
-                model.curEl[totArr[0]].setAttribute('open', false);
-                model.curEl[totArr[1]].setAttribute('open', false);
-                view.clearColor(localStorage.getItem('c1'),localStorage.getItem('c2'));      
-            }
-            totArr = [];  
+            view.updateView(totArr[0],totArr[1]);              
         }
     }
 }
@@ -49,8 +35,7 @@ const view = {
         model.curEl[curLi].setAttribute('open', true);
         model.curEl[curLi].setAttribute('freeze', false);
         model.curEl[curLi].setAttribute('style','background-color:'+y[curLi].color);
-        controller.checkOpenedLi();
-
+        controller.checkOpenedLi(e);
         let step = 0;
         if (localStorage.getItem("steps") === null) {
             localStorage.setItem("steps", 1);
@@ -60,7 +45,22 @@ const view = {
             localStorage.setItem("steps", step);
         }
         document.getElementById('steps').innerHTML = 'Steps '+step;
-        //console.log(step,'c');
+    },
+    updateView : (c1, c2) => {
+        if(y[c1].color === y[c2].color){
+                model.curEl[c1].style.backgroundColor = y[c1].color;
+                model.curEl[c2].style.backgroundColor = y[c2].color;
+                model.curEl[c1].setAttribute('freeze', true);
+                model.curEl[c2].setAttribute('freeze', true);
+                view.checkCompleted();
+            }else{
+                localStorage.setItem('c1',c1);
+                localStorage.setItem('c2',c2);
+                model.curEl[c1].setAttribute('open', false);
+                model.curEl[c2].setAttribute('open', false);
+                view.clearColor(localStorage.getItem('c1'),localStorage.getItem('c2'));      
+            }
+            totArr = [];
     },
     checkCompleted : () => {
         let completed = 0;
@@ -74,7 +74,6 @@ const view = {
         if(completed==16){
             document.getElementById('congrats').style.display = 'block';
             localStorage.removeItem("completed");
-            localStorage.removeItem("steps");
         }
     },
     clearColor : (c1,c2) => {
@@ -87,6 +86,7 @@ const view = {
     }
 }
 
-const y = controller.shuffle(model.colors);
-console.log(y);
+const y = controller.shuffle(model.colors);  
+localStorage.removeItem("completed");
+localStorage.removeItem("steps");  
 model.el.addEventListener('click', controller.elAction);
