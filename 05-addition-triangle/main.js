@@ -7,7 +7,9 @@ const controller = {
     generateTriangle : () => {
         if(model.inputValues.value.length > 0){
             let splitInputs = model.inputValues.value.trim().split(" ");
-            controller.buildTriangle(splitInputs);
+            if(splitInputs.length > 1 && splitInputs.length <12){
+                controller.buildTriangle(splitInputs);
+            }                
         }
     },
     buildTriangle : (array) => {
@@ -30,7 +32,8 @@ const view = {
     renderTriangle : (new_array) => {
         var el = document.createElement('p');
         el.innerHTML = new_array.toString().replace( /,/g, "  " );
-        model.divTriangle.insertAdjacentHTML("afterend", "<p>"+el.innerHTML+"</p>");        
+        let wh_space = new Array(new_array.length + 1).join('&nbsp');
+        model.divTriangle.insertAdjacentHTML("afterend", "<p style='color:red;font-size:28px;font-weight:bold;'>"+wh_space+el.innerHTML+"</p>");             
     }
 };
 model.button.addEventListener('click', controller.generateTriangle);
