@@ -12,8 +12,10 @@ const controller = {
             model.p_list[0].parentNode.removeChild(model.p_list[0])
         if(model.inputValues.value.length > 0){
             let splitInputs = model.inputValues.value.trim().split(" ");
-            if(splitInputs.length > 1 && splitInputs.length <12){
-                controller.buildTriangle(splitInputs);
+            if(!splitInputs.some(isNaN)){
+                if(splitInputs.length > 1 && splitInputs.length <12){
+                    controller.buildTriangle(splitInputs);
+                }
             }                
         }
     },
