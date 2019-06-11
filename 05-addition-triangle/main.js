@@ -72,6 +72,7 @@ const view = {
                 +"</p>");  
                 }, 1000 * indx);         
         });
+        model.inputValues.value = '';
     }
 };
 model.button.addEventListener('click', controller.generateTriangle);
