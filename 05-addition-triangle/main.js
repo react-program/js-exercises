@@ -7,13 +7,13 @@ const model = {
 };
 const controller = {
     generateTriangle : () => {
+        model.totArr = [];
+        while (model.p_list[0])
+            model.p_list[0].parentNode.removeChild(model.p_list[0])
         if(model.inputValues.value.length > 0){
             let splitInputs = model.inputValues.value.trim().split(" ");
-            console.log(splitInputs,'a');
             if(splitInputs.length > 1 && splitInputs.length <12){
-                controller.buildTriangle(splitInputs,splitInputs.length);
-                splitInputs = '';
-                console.log(splitInputs,'b');
+                controller.buildTriangle(splitInputs);
             }                
         }
     },
@@ -36,8 +36,6 @@ const controller = {
 };
 const view = {
     getArray : (array) => {
-        while (model.p_list[0])
-            model.p_list[0].parentNode.removeChild(model.p_list[0])
         let maxLength = [];
         array.forEach(element => {
             maxLength.push(element.toString().replace( /,/g, "" ).length);
