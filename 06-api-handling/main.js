@@ -11,7 +11,18 @@ function init(){
     });
 }
 
-function getAuthorDetails(id){
+function cardTemplate(){
+    let divElement = document.createElement('div');
+    divElement.innerHTML = '<div class="card mb-4">'+
+                                '<div class="card-header text-info"></div>'+
+                                '<div class="card-body text-info"><p class="card-text"></p></div>'+
+                                '<div class="card-footer"><small class="text-muted"><button type="button" class="btn btn-info custom" data-toggle="modal" data-target="#exampleModal">Author Details</button></small></div>'+
+                            '</div>';
+    return divElement;    
+}
+
+function getAuthorDetails(){
+    let id = this.getAttribute('user-id');    
     let getAuthor = checkAuthor(id);
     if(getAuthor){
         renderPopup(getAuthor);
@@ -20,23 +31,28 @@ function getAuthorDetails(id){
         .then(resp => resp.json())
         .then(resp => {           
             authorData.push(resp);
+            document.getElementById("modal-body").innerHTML = '';
             renderPopup(resp);
         })      
-        .catch(resp => console.log(resp));
+        .catch(resp => {
+            document.getElementById("exampleModalLabel").innerText = 'Error';
+            document.getElementById("modal-body").innerHTML = resp;
+            $('#exampleModal').modal('show');
+        });
     }    
 }
 
 function renderPosts(resp){
-    let html = '';
+    let createFragment = document.createDocumentFragment();
     resp.forEach(element => {
-    html += '<div class="card mb-4">'+
-                '<div class="card-header text-info">'+element['title']+'</div>'+
-                '<div class="card-body text-info">'+
-                    '<p class="card-text">'+element['body']+'</p>'+                                                                
-                '</div><div class="card-footer"><small class="text-muted"><button type="button" class="btn btn-info custom" data-toggle="modal" data-target="#exampleModal" onClick="getAuthorDetails('+element["userId"]+');">Author Details</button></small></div>'+
-            '</div>';
-    });
-    document.getElementById("content").innerHTML = html;
+        let html = cardTemplate().cloneNode(true);
+        html.querySelector('.card-header').innerHTML = element['title'];
+        html.querySelector('.card-text').innerHTML = element['body'];
+        html.querySelector('.custom').setAttribute('user-id',element['userId']);
+        html.querySelector('.custom').addEventListener('click', getAuthorDetails);
+        createFragment.appendChild(html);
+    });    
+    document.getElementById("content").appendChild(createFragment);
 }
 
 function renderPopup(resp){
