@@ -5,19 +5,23 @@ function init(){
     .then(resp => resp.json())
     .then(resp => renderPosts(resp))
     .catch(resp => {
-        document.getElementById("exampleModalLabel").innerText = 'Error';
-        document.getElementById("modal-body").innerHTML = resp;
-        $('#exampleModal').modal('show');
+        showError(resp);
     });
+}
+
+function showError(resp){
+    document.getElementById("exampleModalLabel").innerText = 'Error';
+    document.querySelector(".modal-body").innerHTML = resp;
+    $('#exampleModal').modal('show');
 }
 
 function cardTemplate(){
     let divElement = document.createElement('div');
-    divElement.innerHTML = '<div class="card mb-4">'+
-                                '<div class="card-header text-info"></div>'+
-                                '<div class="card-body text-info"><p class="card-text"></p></div>'+
-                                '<div class="card-footer"><small class="text-muted"><button type="button" class="btn btn-info custom" data-toggle="modal" data-target="#exampleModal">Author Details</button></small></div>'+
-                            '</div>';
+    divElement.innerHTML = `<div class="card mb-4">
+                                <div class="card-header text-info"></div>
+                                <div class="card-body text-info"><p class="card-text"></p></div>
+                                <div class="card-footer"><small class="text-muted"><button type="button" class="btn btn-info custom" data-toggle="modal" data-target="#exampleModal">Author Details</button></small></div>
+                            </div>`;
     return divElement;    
 }
 
@@ -27,17 +31,14 @@ function getAuthorDetails(){
     if(getAuthor){
         renderPopup(getAuthor);
     }else{
-        fetch('https://jsonplaceholder.typicode.com/users/'+id)
+        fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
         .then(resp => resp.json())
         .then(resp => {           
             authorData.push(resp);
-            document.getElementById("modal-body").innerHTML = '';
             renderPopup(resp);
         })      
         .catch(resp => {
-            document.getElementById("exampleModalLabel").innerText = 'Error';
-            document.getElementById("modal-body").innerHTML = resp;
-            $('#exampleModal').modal('show');
+            showError(resp);
         });
     }    
 }
@@ -56,12 +57,12 @@ function renderPosts(resp){
 }
 
 function renderPopup(resp){
-    var html = '<p class="alert alert-primary"> Name : '+resp.name+'</p>';
-    html += '<p class="alert alert-secondary"> Email : '+resp.email+'</p>';
-    html += '<p class="alert alert-success"> Company : '+resp.company.name+'</p>';
-    html += '<p class="alert alert-danger"> Address : '+resp.address.suite+'<br/>'+resp.address.street+'<br/>'+resp.address.city+'<br/>'+resp.address.zipcode+'</p>';
-    html += '<p class="alert alert-warning"> Website : '+resp.website+'</p>';
-    document.getElementById("modal-body").innerHTML = html;
+    let modal = document.querySelector('.modal-body');
+    modal.querySelector('.alert-primary').innerHTML = `Name : ${resp.name}`;
+    modal.querySelector('.alert-secondary').innerHTML = `Email : ${resp.email}`;
+    modal.querySelector('.alert-success').innerHTML = `Company : ${resp.company.name}`;
+    modal.querySelector('.alert-danger').innerHTML = `Address : ${resp.name}`;
+    modal.querySelector('.alert-warning').innerHTML = `Website : ${resp.website} <br/> ${resp.address.street} <br/> ${resp.address.city} <br/> ${resp.address.zipcode}`;
 }
 
 function checkAuthor(id){
