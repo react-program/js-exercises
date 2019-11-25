@@ -1,0 +1,14 @@
+{
+  "data": {
+    "stock": [
+      { "item": "Apple", "qty": 5 },
+      { "item": "Avocado", "qty": 3 },
+      { "item": "Banana", "qty": 4 },
+      { "item": "Grape", "qty": 6 },
+      { "item": "Guava", "qty": 4 },
+      { "item": "Mango", "qty": 5 },
+      { "item": "Papaya", "qty": 3 }
+    ],
+    "cart": []
+  }
+}
